@@ -1,0 +1,26 @@
+<!-- Views/KsiazkiPage.xaml -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:BibliotekaDomowa.Views"
+             xmlns:vm="clr-namespace:BibliotekaDomowa.ViewModels"
+             x:Class="BibliotekaDomowa.Views.KsiazkiPage">
+
+    <ContentPage.BindingContext>
+        <vm:KsiazkiViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout Padding="10">
+        <Button Text="Odœwie¿" Command="{Binding OdswiezCommand}" />
+        <CollectionView ItemsSource="{Binding Ksiazki}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Padding="5">
+                        <Label Text="{Binding Tytul}" FontAttributes="Bold" />
+                        <Label Text="{Binding Autor}" />
+                        <Label Text="{Binding RokWydania}" FontSize="12" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+</ContentPage>
