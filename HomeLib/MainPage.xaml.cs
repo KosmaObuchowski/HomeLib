@@ -1,25 +1,30 @@
-﻿namespace HomeLib
+﻿using Microsoft.Maui.Controls;
+using HomeLib.Views;
+using HomeLib.ViewModels;
+
+namespace HomeLib;
+
+
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
+
+    private KsiazkiViewModel _viewModel = new KsiazkiViewModel();
+
+    int count = 0;
+
+    public MainPage()
     {
-        int count = 0;
-
-        public MainPage()
-        {
-            InitializeComponent();
-        }
-
-        private void OnCounterClicked(object sender, EventArgs e)
-        {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
-        }
+        InitializeComponent();
     }
 
+    private async void OnKsiazkiClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new DodajKsiazkePage(_viewModel));
+    }
+
+    private async void OnDodajKsiazkeClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new KsiazkiPage());
+    }
 }

@@ -12,5 +12,3 @@
         </ResourceDictionary>
     </Application.Resources>
 </Application>
-
-MainPage = new NavigationPage(new KsiazkiPage());

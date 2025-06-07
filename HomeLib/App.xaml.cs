@@ -1,12 +1,15 @@
-﻿namespace HomeLib
-{
-    public partial class App : Application
-    {
-        public App()
-        {
-            InitializeComponent();
+﻿using Microsoft.Maui.Controls;
+using HomeLib.Views;
 
-            MainPage = new AppShell();
-        }
+namespace HomeLib;
+
+public partial class App : Application
+{
+    public App()
+    {
+        InitializeComponent();
+
+        MainPage = new NavigationPage(new MainPage());
     }
 }
+

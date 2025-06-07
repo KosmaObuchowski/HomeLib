@@ -1,0 +1,21 @@
+<!-- Views/DodajKsiazkePage.xaml -->
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="HomeLib.Views.DodajKsiazkePage"
+             Title="Dodaj ksiazke">
+
+    <StackLayout Padding="20" Spacing="15">
+        <Label Text="Tytul" />
+        <Entry x:Name="TytulEntry" Placeholder="Wprowadz tytul" />
+
+        <Label Text="Autor" />
+        <Entry x:Name="AutorEntry" Placeholder="Wprowadz autora" />
+
+        <Label Text="Rok wydania" />
+        <Entry x:Name="RokEntry" Placeholder="Wprowadz rok wydania" Keyboard="Numeric" />
+
+        <Button Text="Zapisz" Clicked="OnZapiszClicked" />
+        <Button Text="Anuluj" Clicked="OnAnulujClicked" BackgroundColor="LightGray" />
+    </StackLayout>
+
+</ContentPage>

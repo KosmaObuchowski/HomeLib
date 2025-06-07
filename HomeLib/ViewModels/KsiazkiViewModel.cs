@@ -14,15 +14,24 @@ namespace HomeLib.ViewModels
 {
     public class KsiazkiViewModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public ObservableCollection<Ksiazka> Ksiazki { get; set; } = new();
         KsiazkaDatabase _db;
 
         public ICommand OdswiezCommand { get; }
+        public ICommand UsunCommand { get; }
 
         public KsiazkiViewModel()
         {
             _db = new KsiazkaDatabase();
             OdswiezCommand = new Command(async () => await ZaladujKsiazki());
+            UsunCommand = new Command<Ksiazka>(async (ks) => await UsunKsiazke(ks));
             ZaladujKsiazki().Wait();
         }
 
@@ -34,7 +43,23 @@ namespace HomeLib.ViewModels
                 Ksiazki.Add(ks);
         }
 
-        // dod i usun.
-    }
+        // dodawanie / usuwanie
+        public async Task DodajKsiazke(string tytul, string autor, int rok)
+        {
+            var nowa = new Ksiazka { Tytul = tytul, Autor = autor, RokWydania = rok };
+            await _db.SaveKsiazkaAsync(nowa);
+            await ZaladujKsiazki();
+        }
 
+        public async Task UsunKsiazke(Ksiazka ksiazka)
+        {
+            if (ksiazka != null)
+            {
+                await _db.DeleteKsiazkaAsync(ksiazka);
+                Ksiazki.Remove(ksiazka); // opcjonalne, ale przyspiesza UI
+                // lub await ZaladujKsiazki(); jeśli chcesz zawsze pełne odświeżenie
+            }
+        }
+
+    }
 }

@@ -4,16 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SQLite;
+using System.ComponentModel.DataAnnotations;
 
 namespace HomeLib.Models
 {
     public class Ksiazka
     {
-        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-
-        public string Tytul { get; set; }
-        public string Autor { get; set; }
+        public string Tytul { get; set; } = string.Empty;
+        public string Autor { get; set; } = string.Empty;
         public int RokWydania { get; set; }
     }
 }

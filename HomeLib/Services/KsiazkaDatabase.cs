@@ -5,38 +5,41 @@ using System.Text;
 using System.Threading.Tasks;
 using HomeLib.Models;
 using SQLite;
-
+using Microsoft.EntityFrameworkCore;
 
 
 namespace HomeLib.Services
 {
     public class KsiazkaDatabase
     {
-        readonly SQLiteAsyncConnection _database;
-
         public KsiazkaDatabase()
         {
-            var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "biblioteka.db3");
-            _database = new SQLiteAsyncConnection(dbPath);
-            _database.CreateTableAsync<Ksiazka>().Wait();
+            using var db = new KsiazkaContext();
+            db.Database.EnsureCreated();
         }
 
-        public Task<List<Ksiazka>> GetKsiazkiAsync()
+        public async Task<List<Ksiazka>> GetKsiazkiAsync()
         {
-            return _database.Table<Ksiazka>().ToListAsync();
+            using var db = new KsiazkaContext();
+            return await db.Ksiazki.ToListAsync();
         }
 
-        public Task<int> SaveKsiazkaAsync(Ksiazka ksiazka)
+        public async Task SaveKsiazkaAsync(Ksiazka ksiazka)
         {
+            using var db = new KsiazkaContext();
             if (ksiazka.Id != 0)
-                return _database.UpdateAsync(ksiazka);
+                db.Ksiazki.Update(ksiazka);
             else
-                return _database.InsertAsync(ksiazka);
+                db.Ksiazki.Add(ksiazka);
+
+            await db.SaveChangesAsync();
         }
 
-        public Task<int> DeleteKsiazkaAsync(Ksiazka ksiazka)
+        public async Task DeleteKsiazkaAsync(Ksiazka ksiazka)
         {
-            return _database.DeleteAsync(ksiazka);
+            using var db = new KsiazkaContext();
+            db.Ksiazki.Remove(ksiazka);
+            await db.SaveChangesAsync();
         }
     }
 }
