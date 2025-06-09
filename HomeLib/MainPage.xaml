@@ -8,11 +8,11 @@
         <Label Text="📚 HomeLib" FontSize="32" FontAttributes="Bold" />
         <Label Text="Twoja osobista biblioteka" FontSize="18" />
 
-        <Button Text="Zobacz ksiazki"
+        <Button Text="Dodaj ksiazke"
                 Clicked="OnKsiazkiClicked"
                 WidthRequest="200" />
 
-        <Button Text="Dodaj ksiazke"
+        <Button Text="Zobacz ksiazki"
                 Clicked="OnDodajKsiazkeClicked"
                 WidthRequest="200" />
     </VerticalStackLayout>
@@ -21,8 +21,5 @@
     
     
 <!-- poprawic UI 
-    czysta strona z sama mozliwoscia dodania ksiazek
-    strona z mozliwoscia wyswietlenia listy ksiazek
-    mozliwosc usuwania ksiazek z listy
     mozliwosc googlowania ksiazek?
 -->

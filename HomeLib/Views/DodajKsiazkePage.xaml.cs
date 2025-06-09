@@ -12,11 +12,21 @@ namespace HomeLib.Views
     public partial class DodajKsiazkePage : ContentPage
     {
         KsiazkiViewModel _viewModel;
+        private Ksiazka? _edytowanaKsiazka;
 
-        public DodajKsiazkePage(KsiazkiViewModel viewModel)
+
+        public DodajKsiazkePage(KsiazkiViewModel viewModel, Ksiazka ksiazka = null)
         {
             InitializeComponent();
             _viewModel = viewModel;
+
+            if (ksiazka != null)
+            {
+                _edytowanaKsiazka = ksiazka;
+                TytulEntry.Text = _edytowanaKsiazka.Tytul;
+                AutorEntry.Text = _edytowanaKsiazka.Autor;
+                RokEntry.Text = _edytowanaKsiazka.RokWydania.ToString();
+            }
         }
 
         private async void OnZapiszClicked(object sender, EventArgs e)
@@ -31,8 +41,9 @@ namespace HomeLib.Views
                 return;
             }
 
-            await _viewModel.DodajKsiazke(tytul, autor, rok);
-            await Navigation.PopAsync(); // wraca do listy książek
+            await _viewModel.DodajLubZaktualizujKsiazke(_edytowanaKsiazka, tytul, autor, rok);
+            //await _viewModel.DodajKsiazke(tytul, autor, rok);
+            await Navigation.PopAsync();
         }
 
         public DodajKsiazkePage() : this(new KsiazkiViewModel())

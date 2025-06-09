@@ -21,8 +21,26 @@ namespace HomeLib.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private List<Ksiazka> _wszystkieKsiazki = new();
         public ObservableCollection<Ksiazka> Ksiazki { get; set; } = new();
         KsiazkaDatabase _db;
+
+        //
+        private string _szukajTekst = string.Empty;
+        public string SzukajTekst
+        {
+            get => _szukajTekst;
+            set
+            {
+                if (_szukajTekst != value)
+                {
+                    _szukajTekst = value;
+                    OnPropertyChanged(nameof(SzukajTekst));
+                    FiltrujKsiazki();
+                }
+            }
+        }
+
 
         public ICommand OdswiezCommand { get; }
         public ICommand UsunCommand { get; }
@@ -37,13 +55,27 @@ namespace HomeLib.ViewModels
 
         public async Task ZaladujKsiazki()
         {
-            var lista = await _db.GetKsiazkiAsync();
-            Ksiazki.Clear();
-            foreach (var ks in lista)
-                Ksiazki.Add(ks);
+            _wszystkieKsiazki = (await _db.GetKsiazkiAsync()).ToList();
+
+            FiltrujKsiazki();
         }
 
-        // dodawanie / usuwanie
+
+        private void FiltrujKsiazki()
+        {
+            var filtr = SzukajTekst?.ToLower() ?? "";
+            Ksiazki.Clear();
+            var filtrowane = _wszystkieKsiazki
+            .Where(ks => ks.Tytul.ToLower().Contains(filtr) || ks.Autor.ToLower().Contains(filtr));
+
+            foreach (var ks in filtrowane)
+            {
+                Ksiazki.Add(ks);
+            }
+        }
+
+
+
         public async Task DodajKsiazke(string tytul, string autor, int rok)
         {
             var nowa = new Ksiazka { Tytul = tytul, Autor = autor, RokWydania = rok };
@@ -56,10 +88,30 @@ namespace HomeLib.ViewModels
             if (ksiazka != null)
             {
                 await _db.DeleteKsiazkaAsync(ksiazka);
-                Ksiazki.Remove(ksiazka); // opcjonalne, ale przyspiesza UI
-                // lub await ZaladujKsiazki(); jeśli chcesz zawsze pełne odświeżenie
+                Ksiazki.Remove(ksiazka);
             }
         }
+
+        public async Task DodajLubZaktualizujKsiazke(Ksiazka staraKsiazka, string tytul, string autor, int rok)
+        {
+            if (staraKsiazka == null)
+            {
+                await DodajKsiazke(tytul, autor, rok);
+            }
+            else
+            {
+                staraKsiazka.Tytul = tytul;
+                staraKsiazka.Autor = autor;
+                staraKsiazka.RokWydania = rok;
+                await _db.SaveKsiazkaAsync(staraKsiazka);
+                await ZaladujKsiazki();
+            }
+        }
+
+
+
+
+
 
     }
 }

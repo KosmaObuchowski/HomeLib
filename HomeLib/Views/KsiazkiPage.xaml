@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:HomeLib.Views"
              xmlns:vm="clr-namespace:HomeLib.ViewModels"
+			 x:Name="Page"
              x:Class="HomeLib.Views.KsiazkiPage"
 			 Title="HomeLibrary">
 
@@ -10,33 +11,64 @@
         <vm:KsiazkiViewModel />
     </ContentPage.BindingContext>
 
-	<StackLayout Padding="10" Spacing="10">
-		<Button Text="Odswiez" Command="{Binding OdswiezCommand}" />
-		<Button Text="Dodaj ksiazke"
-        Clicked="OnDodajClicked"
-        BackgroundColor="LightGreen" />
+	<Grid Padding="10" RowSpacing="10">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
 
-		<CollectionView ItemsSource="{Binding Ksiazki}">
+		<Entry Grid.Row="0"
+               Placeholder="Szukaj książki lub autora"
+               Text="{Binding SzukajTekst, Mode=TwoWay}" />
+		
+		<Button Grid.Row="1" Text="Odswiez" Command="{Binding OdswiezCommand}" />
+		<Button Grid.Row="2" Text="Dodaj ksiazke"
+                Clicked="OnDodajClicked"
+                BackgroundColor="LightGreen" />
+
+		<CollectionView Grid.Row="3"
+                        ItemsSource="{Binding Ksiazki}"
+                        Margin="0,10,0,0">
 			<CollectionView.ItemTemplate>
 				<DataTemplate>
 					<Frame BorderColor="LightGray" Padding="10" Margin="5">
-						<StackLayout>
-							<Label Text="{Binding Tytul}" FontAttributes="Bold" FontSize="18"/>
-							<Label Text="{Binding Autor}" FontSize="14"/>
+						<VerticalStackLayout Spacing="10">
+							<Label Text="{Binding Tytul}" FontAttributes="Bold" FontSize="18" />
+							<Label Text="{Binding Autor}" FontSize="14" />
 							<Label Text="{Binding RokWydania}" FontSize="12" />
-							<Button Text="Usun"
-                                    Command="{Binding BindingContext.UsunCommand, Source={x:Reference Name=Page}}"
-                                    CommandParameter="{Binding .}"
-                                    BackgroundColor="IndianRed"
-                                    TextColor="White"/>
-						</StackLayout>
+
+							<HorizontalStackLayout Spacing="10">
+								<Button Text="Usuń"
+										Command="{Binding BindingContext.UsunCommand, Source={x:Reference Page}}"
+										CommandParameter="{Binding .}"
+										BackgroundColor="IndianRed"
+										TextColor="White"
+										HeightRequest="40"
+										VerticalOptions="Start" />
+
+								<Button Text="Szukaj w Google"
+										Clicked="OnSzukajGoogleClicked"
+										CommandParameter="{Binding Tytul}"
+										BackgroundColor="DodgerBlue"
+										TextColor="White"
+										HeightRequest="40"
+										VerticalOptions="Start" />
+
+								<Button Text="Edytuj"
+										Clicked="OnEdytujClicked"
+										CommandParameter="{Binding .}"
+										BackgroundColor="Orange"
+										TextColor="White"
+										HeightRequest="40"
+										VerticalOptions="Start" />
+
+							</HorizontalStackLayout>
+						</VerticalStackLayout>
 					</Frame>
 				</DataTemplate>
 			</CollectionView.ItemTemplate>
 		</CollectionView>
-
-		<!--<Button Text="Dodaj nowa ksiazke"
-                Clicked="OnDodajKsiazkeClicked"
-                BackgroundColor="LightGreen"/>-->
-	</StackLayout>
+	</Grid>
 </ContentPage>
